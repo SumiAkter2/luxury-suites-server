@@ -20,12 +20,22 @@ async function run() {
   try {
     await client.connect();
     const suitesCollection = client.db("luxury_suites").collection("suites");
+    const reviewsCollection = client.db("luxury_suites").collection("reviews");
     // all suites find:
     app.get("/suites", async (req, res) => {
       const query = {};
       const result = suitesCollection.find(query);
       const suites = await result.toArray();
       res.send(suites);
+    });
+    // all reviews:
+    app.post("/reviews", async (req, res) => {
+      const result = reviewsCollection.insertOne(req.body);
+      res.json(result);
+    });
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewsCollection.find({}).toArray();
+      res.json(result);
     });
   } finally {
   }
