@@ -15,12 +15,14 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-
 async function run() {
   try {
     await client.connect();
     const suitesCollection = client.db("luxury_suites").collection("suites");
     const reviewsCollection = client.db("luxury_suites").collection("reviews");
+    const bookingsCollection = client
+      .db("luxury_suites")
+      .collection("bookings");
     // all suites find:
     app.get("/suites", async (req, res) => {
       const query = {};
@@ -28,14 +30,24 @@ async function run() {
       const suites = await result.toArray();
       res.send(suites);
     });
+    // Add booking:
+    app.post("/bookings", async (req, res) => {
+      const bookings = await bookingsCollection.insertOne(req.body);
+      res.send(bookings);
+      console.log("bookings", bookings);
+    });
+    app.get("/bookings", async (req, res) => {
+      const bookings = await bookingsCollection.find({}).toArray();
+      res.send(bookings);
+    });
     // all reviews:
     app.post("/reviews", async (req, res) => {
-      const result = reviewsCollection.insertOne(req.body);
-      res.json(result);
+      const review = await reviewsCollection.insertOne(req.body);
+      res.send(review);
     });
     app.get("/reviews", async (req, res) => {
-      const result = await reviewsCollection.find({}).toArray();
-      res.json(result);
+      const reviews = await reviewsCollection.find({}).toArray();
+      res.send(reviews);
     });
   } finally {
   }
@@ -43,7 +55,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("Luxury suites");
+  res.send("Luxury suites are Available");
 });
 app.listen(port, (req, res) => {
   console.log("Luxury suites", port);
