@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -40,6 +40,18 @@ async function run() {
       const bookings = await bookingsCollection.find({}).toArray();
       res.send(bookings);
     });
+    // app.delete("/bookings/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: ObjectId(id) };
+    //   const result = await bookingsCollection.deleteOne(query);
+    //   res.json(result);
+    // });
+    // app.delete("/deleteBooking/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: ObjectId(id) };
+    //   const result = await bookingsCollection.deleteOne(query);
+    //   res.json(result);
+    // });
     // all reviews:
     app.post("/reviews", async (req, res) => {
       const review = await reviewsCollection.insertOne(req.body);
