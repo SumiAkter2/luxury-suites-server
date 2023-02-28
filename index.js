@@ -67,7 +67,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("Luxury suites are Available");
+  res.send("Luxury suites are Available for You");
 });
 app.listen(port, (req, res) => {
   console.log("Luxury suites", port);
