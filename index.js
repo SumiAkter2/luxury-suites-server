@@ -23,6 +23,7 @@ async function run() {
     const bookingsCollection = client
       .db("luxury_suites")
       .collection("bookings");
+
     // all suites find:
     app.get("/suites", async (req, res) => {
       const query = {};
@@ -40,18 +41,19 @@ async function run() {
       const bookings = await bookingsCollection.find({}).toArray();
       res.send(bookings);
     });
-    // app.delete("/bookings/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const result = await bookingsCollection.deleteOne(query);
-    //   res.json(result);
-    // });
-    // app.delete("/deleteBooking/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const result = await bookingsCollection.deleteOne(query);
-    //   res.json(result);
-    // });
+    app.get("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await bookingsCollection.findOne(filter);
+      res.send(result);
+    });
+    app.delete("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingsCollection.deleteOne(query);
+      res.send(result);
+    });
+
     // all reviews:
     app.post("/reviews", async (req, res) => {
       const review = await reviewsCollection.insertOne(req.body);
